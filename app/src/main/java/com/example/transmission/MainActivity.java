@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
@@ -20,7 +19,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.Person;
 import androidx.core.app.RemoteInput;
-import androidx.core.graphics.drawable.IconCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -120,7 +118,7 @@ private int a = 69;
 
         UsbDevice device = getIntent().getParcelableExtra(UsbManager.EXTRA_DEVICE);
 
-        Intent intent = new Intent(getApplicationContext(), TransmissionAntennaService.class);
+        Intent intent = new Intent(getApplicationContext(), RadioService.class);
 
         if (device != null)
         {

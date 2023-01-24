@@ -9,18 +9,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
-import androidx.core.content.ContextCompat;
 
-public class TransmissionAntennaService extends Service {
-    public TransmissionAntennaService() {
+public class RadioService extends Service {
+    public RadioService() {
     }
 
+
+    private final IBinder binder = new RadioServiceBinder();
     BroadcastReceiver usbDisconnectionReceiver;
 
     UsbDevice usbDevice;
@@ -77,7 +78,7 @@ public class TransmissionAntennaService extends Service {
                         PendingIntent.FLAG_IMMUTABLE);
 
         // make the "stop service" action
-        Intent stopIntent = new Intent(getApplicationContext(), TransmissionAntennaService.class)
+        Intent stopIntent = new Intent(getApplicationContext(), RadioService.class)
                 .putExtra("stop", true);
 
         PendingIntent stopPendingIntent =
@@ -118,8 +119,7 @@ public class TransmissionAntennaService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+        return binder;
     }
 
     @Override
@@ -127,5 +127,11 @@ public class TransmissionAntennaService extends Service {
         stopForeground(true);
         getApplicationContext().unregisterReceiver(usbDisconnectionReceiver);
         super.onDestroy();
+    }
+
+    public class RadioServiceBinder extends Binder {
+        RadioService getService() {
+            return RadioService.this;
+        }
     }
 }
