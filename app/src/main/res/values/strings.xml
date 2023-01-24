@@ -6,8 +6,9 @@
     <string name="persistent_notification_channel_id">persistent-channel</string>
     <string name="persistent_notification_channel_name">Persistent Notification</string>
     <string name="persistent_notification_channel_description">The persistent notification will go here</string>
-    <string name="persistent_notification_stop">Stop Transmission</string>
-
+    <string name="persistent_notification_stop">Stop</string>
+    <string name="persistent_notification_no_radio">No radio connected.</string>
+    <string name="persistent_notification_radios">%1$i radio(s) connected.</string>
     <string name="reply_label">Reply</string>
     <string name="persistent_notification_title">Transmission is running</string>
 

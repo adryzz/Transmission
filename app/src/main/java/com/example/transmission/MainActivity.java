@@ -6,6 +6,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -41,9 +43,6 @@ private int a = 69;
         setContentView(binding.getRoot());
 
         createNotificationChannels();
-
-        Intent intent = new Intent(getApplicationContext(), TransmissionAntennaService.class);
-        startForegroundService(intent);
 
         setSupportActionBar(binding.toolbar);
 
@@ -90,6 +89,8 @@ private int a = 69;
                         .addAction(action)
                         .setSmallIcon(R.drawable.signal_cellular_4_bar_24)
                         .setGroup("KEY_TEXT_REPLY")
+                        .setColor(getColor(R.color.purple_500))
+                        .setAutoCancel(true)
                         .build();
 
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
@@ -111,6 +112,21 @@ private int a = 69;
         NotificationChannel persistentChannel = new NotificationChannel(getString(R.string.persistent_notification_channel_id), getString(R.string.persistent_notification_channel_name), NotificationManager.IMPORTANCE_DEFAULT);
         persistentChannel.setDescription(getString(R.string.persistent_notification_channel_description));
         notificationManager.createNotificationChannel(persistentChannel);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        UsbDevice device = getIntent().getParcelableExtra(UsbManager.EXTRA_DEVICE);
+
+        Intent intent = new Intent(getApplicationContext(), TransmissionAntennaService.class);
+
+        if (device != null)
+        {
+            intent.putExtra(UsbManager.EXTRA_DEVICE, device);
+        }
+        startForegroundService(intent);
     }
 
     @Override
