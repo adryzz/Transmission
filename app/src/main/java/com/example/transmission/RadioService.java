@@ -19,8 +19,6 @@ import androidx.core.app.TaskStackBuilder;
 public class RadioService extends Service {
     public RadioService() {
     }
-
-
     private final IBinder binder = new RadioServiceBinder();
     BroadcastReceiver usbDisconnectionReceiver;
 
