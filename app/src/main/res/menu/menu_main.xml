@@ -30,5 +30,6 @@
         android:menuCategory="container"
         android:orderInCategory="400"
         android:title="@string/action_toggle_radio_2"
+        android:visible="false"
         app:showAsAction="ifRoom" />
 </menu>

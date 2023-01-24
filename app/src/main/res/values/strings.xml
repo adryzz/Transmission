@@ -23,20 +23,22 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="large_text">SettinafafsgsActivity</string>
 
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
+    <!-- Preferences -->
+    <!-- Radio -->
+    <string name="settings_category_radio0_name">Radio 0</string>
+    <string name="settings_category_radio1_name">Radio 1</string>
+    <string name="settings_category_radio2_name">Radio 2</string>
+    <string name="settings_category_radio0_disconnected_name">Radio 0 (Not connected)</string>
+    <string name="settings_category_radio1_disconnected_name">Radio 1 (Not connected)</string>
+    <string name="settings_category_radio2_disconnected_name">Radio 2 (Not connected)</string>
 
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="settings_enabled_label">Enabled</string>
+    <string name="settings_frequency_label">Frequency (MHz)</string>
+    <string name="settings_tx_power_label">Transmit Power</string>
+    <string name="settings_tx_power_summary">A higher value means higher transmission range, but it increases power consumption.</string>
+    <string name="settings_spreading_factor_label">Spreading Factor</string>
+    <string name="settings_spreading_factor_summary">A higher value means higher reception quality, but also lower transmission speed.</string>
 </resources>

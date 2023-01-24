@@ -83,10 +83,10 @@ private int a = 69;
                 Notification notification = new NotificationCompat.Builder(getApplicationContext(), getString(R.string.messages_notification_channel_id))
                         .setStyle(new NotificationCompat.MessagingStyle(n)
                                 .setConversationTitle("sela")
-                                .addMessage("Hi", 1, n) // Pass in null for user.
-                                .addMessage("What's up?", 2, p)
-                                .addMessage("Not much", 3, n)
-                                .addMessage("How about lunch?", 4, p))
+                                .addMessage("aaaa", 1, n) // Pass in null for user.
+                                .addMessage("amogus sus?", 2, p)
+                                .addMessage("sussy", 3, n)
+                                .addMessage("yes sussy amogus sus", 4, p))
                         .addAction(action)
                         .setSmallIcon(R.drawable.signal_cellular_4_bar_24)
                         .setGroup("KEY_TEXT_REPLY")
