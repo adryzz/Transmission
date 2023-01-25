@@ -16,13 +16,16 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
 
+import java.util.List;
+
 public class RadioService extends Service {
     public RadioService() {
     }
     private final IBinder binder = new RadioServiceBinder();
     BroadcastReceiver usbDisconnectionReceiver;
-
     UsbDevice usbDevice;
+
+    MessageReceivedEventListener messageListener;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -61,7 +64,7 @@ public class RadioService extends Service {
 
         // check if the device is actually connected (and if we have the permission to open said device)
         if (device != null && manager.hasPermission(device)) {
-            notifText = getString(R.string.persistent_notification_radios);
+            notifText = getString(R.string.persistent_notification_radios, getConnectedRadios());
             usbDevice = device;
         }
         startForeground(9, createPersistentNotification(notifText));
@@ -128,8 +131,36 @@ public class RadioService extends Service {
     }
 
     public class RadioServiceBinder extends Binder {
-        RadioService getService() {
+        public RadioService getService() {
             return RadioService.this;
         }
     }
+
+
+    /* SERVICE INTERFACE AAAAAA */
+
+    public int getConnectedRadios() {
+        return 2;
+    }
+
+    public void setRadioEnabled(int radio, boolean enabled) {
+
+    }
+
+    public Conversation[] getConversations() {
+        Conversation[] c = new Conversation[1];
+        c[0] = new Conversation();
+        c[0].name = "sela";
+        return c;
+    }
+
+    public void setOnMessageReceivedEventListener(MessageReceivedEventListener listener) {
+        messageListener = listener;
+    }
+
+    public interface MessageReceivedEventListener {
+        void onMessageReceived(Message message);
+    }
+
+
 }

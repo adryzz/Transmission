@@ -35,6 +35,9 @@
     <string name="settings_category_radio0_disconnected_name">Radio 0 (Not connected)</string>
     <string name="settings_category_radio1_disconnected_name">Radio 1 (Not connected)</string>
     <string name="settings_category_radio2_disconnected_name">Radio 2 (Not connected)</string>
+    <string name="settings_category_radio0_id">radio0_category</string>
+    <string name="settings_category_radio1_id">radio1_category</string>
+    <string name="settings_category_radio2_id">radio2_category</string>
 
     <string name="settings_enabled_label">Enabled</string>
     <string name="settings_radio0_enabled_id">radio0_enabled</string>

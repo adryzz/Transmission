@@ -4,7 +4,9 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
@@ -13,12 +15,16 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.IBinder;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.Person;
 import androidx.core.app.RemoteInput;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -27,12 +33,15 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.transmission.databinding.ActivityMainBinding;
 
 import android.view.Menu;
-import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+
+    private RadioService service;
+
+    private boolean isServiceConnected = false;
 private int a = 69;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +134,54 @@ private int a = 69;
             intent.putExtra(UsbManager.EXTRA_DEVICE, device);
         }
         startForegroundService(intent);
+
+        serviceConnection();
+    }
+
+    void serviceConnection() {
+        Intent bindIntent = new Intent(getApplicationContext(), RadioService.class);
+        ServiceConnection connection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder svc) {
+                service = ((RadioService.RadioServiceBinder)svc).getService();
+                isServiceConnected = true;
+                int radios = service.getConnectedRadios();
+                //Fragment main = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
+                /*
+                Toolbar toolbar = findViewById(R.id.toolbar);
+
+                Menu menu = toolbar.getMenu();
+
+                MenuItem radio0 = menu.findItem(R.id.action_antenna0_toggle);
+                MenuItem radio1 = menu.findItem(R.id.action_antenna0_toggle);
+                MenuItem radio2 = menu.findItem(R.id.action_antenna0_toggle);
+
+                radio0.setVisible(radios > 0);
+                radio1.setVisible(radios > 1);
+                radio2.setVisible(radios > 2);
+
+                radio0.setEnabled(radios > 0);
+                radio1.setVisible(radios > 1);
+                radio2.setVisible(radios > 2);*/
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                isServiceConnected = false;
+                /*Toolbar toolbar = findViewById(R.id.toolbar);
+
+                Menu menu = toolbar.getMenu();
+
+                MenuItem radio0 = menu.findItem(R.id.action_antenna0_toggle);
+                MenuItem radio1 = menu.findItem(R.id.action_antenna0_toggle);
+                MenuItem radio2 = menu.findItem(R.id.action_antenna0_toggle);
+
+                radio0.setEnabled(false);
+                radio1.setVisible(false);
+                radio2.setVisible(false);*/
+            }
+        };
+        bindService(bindIntent, connection, 0);
     }
 
     @Override
