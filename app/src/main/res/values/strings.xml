@@ -37,9 +37,39 @@
     <string name="settings_category_radio2_disconnected_name">Radio 2 (Not connected)</string>
 
     <string name="settings_enabled_label">Enabled</string>
+    <string name="settings_radio0_enabled_id">radio0_enabled</string>
+    <string name="settings_radio1_enabled_id">radio1_enabled</string>
+    <string name="settings_radio2_enabled_id">radio2_enabled</string>
+
     <string name="settings_frequency_label">Frequency (MHz)</string>
-    <string name="settings_tx_power_label">Transmit Power</string>
+    <string name="settings_radio0_frequency_id">radio0_frequency</string>
+    <string name="settings_radio1_frequency_id">radio1_frequency</string>
+    <string name="settings_radio2_frequency_id">radio2_frequency</string>
+
+    <string name="settings_tx_power_label">Transmit Power (dBm)</string>
     <string name="settings_tx_power_summary">A higher value means higher transmission range, but it increases power consumption.</string>
+    <string name="settings_radio0_tx_power_id">radio0_tx_power</string>
+    <string name="settings_radio1_tx_power_id">radio1_tx_power</string>
+    <string name="settings_radio2_tx_power_id">radio2_tx_power</string>
+
+    <string name="settings_lna_gain_label">LNA Gain</string>
+    <string name="settings_lna_gain_summary">The RX Gain. Set to 0 for AGC (Automatic Gain Control)</string>
+    <string name="settings_radio0_lna_gain_id">radio0_lna_gain</string>
+    <string name="settings_radio1_lna_gain_id">radio1_lna_gain</string>
+    <string name="settings_radio2_lna_gain_id">radio2_lna_gain</string>
+
     <string name="settings_spreading_factor_label">Spreading Factor</string>
     <string name="settings_spreading_factor_summary">A higher value means higher reception quality, but also lower transmission speed.</string>
+    <string name="settings_radio0_spreading_factor_id">radio0_spreading_factor</string>
+    <string name="settings_radio1_spreading_factor_id">radio1_spreading_factor</string>
+    <string name="settings_radio2_spreading_factor_id">radio2_spreading_factor</string>
+
+    <string name="settings_category_reset">Reset</string>
+    <string name="settings_reset_button_label">Reset all settings to defaults</string>
+    <string name="settings_reset_button_summary">Resets all settings to the app defaults</string>
+    <string name="settings_reset_button_id">reset_all_settings_button</string>
+    <string name="settings_reset_dialog_title">Reset all settings to app defaults?</string>
+    <string name="settings_reset_dialog_message">This action cannot be reverted!</string>
+    <string name="settings_reset_dialog_cancel_text">Cancel</string>
+    <string name="settings_reset_dialog_reset_text">Reset</string>
 </resources>
