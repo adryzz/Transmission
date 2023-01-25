@@ -29,6 +29,9 @@
 
     <!-- Preferences -->
     <!-- Radio -->
+    <string name="settings_category_radio">Radio</string>
+    <string name="settings_category_radio_id">radio_fragment_button</string>
+
     <string name="settings_category_radio0_name">Radio 0</string>
     <string name="settings_category_radio1_name">Radio 1</string>
     <string name="settings_category_radio2_name">Radio 2</string>
@@ -67,12 +70,12 @@
     <string name="settings_radio1_spreading_factor_id">radio1_spreading_factor</string>
     <string name="settings_radio2_spreading_factor_id">radio2_spreading_factor</string>
 
-    <string name="settings_category_reset">Reset</string>
-    <string name="settings_reset_button_label">Reset all settings to defaults</string>
-    <string name="settings_reset_button_summary">Resets all settings to the app defaults</string>
-    <string name="settings_reset_button_id">reset_all_settings_button</string>
-    <string name="settings_reset_dialog_title">Reset all settings to app defaults?</string>
-    <string name="settings_reset_dialog_message">This action cannot be reverted!</string>
-    <string name="settings_reset_dialog_cancel_text">Cancel</string>
-    <string name="settings_reset_dialog_reset_text">Reset</string>
+    <string name="settings_category_reset_radio">Reset</string>
+    <string name="settings_reset_radio_button_label">Reset all radio settings to defaults</string>
+    <string name="settings_reset_radio_button_summary">Resets all radio settings to the app defaults</string>
+    <string name="settings_reset_radio_button_id">reset_all_radio_settings_button</string>
+    <string name="settings_reset_radio_dialog_title">Reset all radio settings to app defaults?</string>
+    <string name="settings_reset_radio_dialog_message">This action cannot be reverted!</string>
+    <string name="settings_reset_radio_dialog_cancel_text">Cancel</string>
+    <string name="settings_reset_radio_dialog_reset_text">Reset</string>
 </resources>

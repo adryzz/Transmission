@@ -59,52 +59,49 @@ private int a = 69;
 
 
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "This should in theory open the menu to add a new conversation, but it's clearly not implemented yet.", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+        binding.fab.setOnClickListener(view -> {
+            Snackbar.make(view, "This should in theory open the menu to add a new conversation, but it's clearly not implemented yet.", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
 
-                String replyLabel = getResources().getString(R.string.reply_label);
-                RemoteInput remoteInput = new RemoteInput.Builder("KEY_TEXT_REPLY")
-                        .setLabel(replyLabel)
-                        .build();
+            String replyLabel = getResources().getString(R.string.reply_label);
+            RemoteInput remoteInput = new RemoteInput.Builder("KEY_TEXT_REPLY")
+                    .setLabel(replyLabel)
+                    .build();
 
-                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
 
-                PendingIntent replyPendingIntent =
-                        PendingIntent.getBroadcast(getApplicationContext(),
-                                a,
-                                i,
-                                PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent replyPendingIntent =
+                    PendingIntent.getBroadcast(getApplicationContext(),
+                            a,
+                            i,
+                            PendingIntent.FLAG_UPDATE_CURRENT);
 
-                NotificationCompat.Action action =
-                        new NotificationCompat.Action.Builder(R.drawable.round_add_24,
-                                getString(R.string.reply_label), replyPendingIntent)
-                                .addRemoteInput(remoteInput)
-                                .build();
+            NotificationCompat.Action action =
+                    new NotificationCompat.Action.Builder(R.drawable.round_add_24,
+                            getString(R.string.reply_label), replyPendingIntent)
+                            .addRemoteInput(remoteInput)
+                            .build();
 
-                Person p = new Person.Builder().setName("sela").setBot(true).build();
-                Person n = new Person.Builder().setName("me").setBot(true).build();
-                Notification notification = new NotificationCompat.Builder(getApplicationContext(), getString(R.string.messages_notification_channel_id))
-                        .setStyle(new NotificationCompat.MessagingStyle(n)
-                                .setConversationTitle("sela")
-                                .addMessage("aaaa", 1, n) // Pass in null for user.
-                                .addMessage("amogus sus?", 2, p)
-                                .addMessage("sussy", 3, n)
-                                .addMessage("yes sussy amogus sus", 4, p))
-                        .addAction(action)
-                        .setSmallIcon(R.drawable.signal_cellular_4_bar_24)
-                        .setGroup("KEY_TEXT_REPLY")
-                        .setColor(getColor(R.color.purple_500))
-                        .setAutoCancel(true)
-                        .build();
+            Person p = new Person.Builder().setName("sela").setBot(true).build();
+            Person n = new Person.Builder().setName("me").setBot(true).build();
+            Notification notification = new NotificationCompat.Builder(getApplicationContext(), getString(R.string.messages_notification_channel_id))
+                    .setStyle(new NotificationCompat.MessagingStyle(n)
+                            .setConversationTitle("sela")
+                            .addMessage("aaaa", 1, n) // Pass in null for user.
+                            .addMessage("amogus sus?", 2, p)
+                            .addMessage("sussy", 3, n)
+                            .addMessage("yes sussy amogus sus", 4, p))
+                    .addAction(action)
+                    .setSmallIcon(R.drawable.signal_cellular_4_bar_24)
+                    .setGroup("KEY_TEXT_REPLY")
+                    .setColor(getColor(R.color.purple_500))
+                    .setAutoCancel(true)
+                    .build();
 
-                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
-                notificationManager.notify(a, notification);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+            notificationManager.notify(a, notification);
 
-                a++;
-            }
+            a++;
         });
     }
 

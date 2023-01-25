@@ -15,14 +15,12 @@ import android.os.IBinder;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
-
-import java.util.List;
-
 public class RadioService extends Service {
     public RadioService() {
     }
     private final IBinder binder = new RadioServiceBinder();
     BroadcastReceiver usbDisconnectionReceiver;
+    BroadcastReceiver lowBatteryReceiver;
     UsbDevice usbDevice;
 
     MessageReceivedEventListener messageListener;
@@ -39,23 +37,7 @@ public class RadioService extends Service {
                 stopSelf();
             }
         }
-        usbDisconnectionReceiver = new BroadcastReceiver() {
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-
-                if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
-                    UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                    if (device != null && device.getDeviceId() == usbDevice.getDeviceId()) {
-                        // call your method that cleans up and closes communication with the device
-
-                        NotificationManagerCompat.from(getApplicationContext()).notify(9,
-                                createPersistentNotification(getString(R.string.persistent_notification_no_radio)));
-                    }
-                }
-            }
-        };
-
-        getApplicationContext().registerReceiver(usbDisconnectionReceiver, new IntentFilter(UsbManager.ACTION_USB_DEVICE_DETACHED));
+        setupIntentReceivers();
 
         UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
         UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
@@ -118,6 +100,40 @@ public class RadioService extends Service {
         return notification;
     }
 
+    private void setupIntentReceivers() {
+        usbDisconnectionReceiver = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+
+                if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
+                    UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                    if (device != null && device.getDeviceId() == usbDevice.getDeviceId()) {
+                        // call your method that cleans up and closes communication with the device
+
+                        NotificationManagerCompat.from(getApplicationContext()).notify(9,
+                                createPersistentNotification(getString(R.string.persistent_notification_no_radio)));
+                    }
+                }
+            }
+        };
+
+        getApplicationContext().registerReceiver(usbDisconnectionReceiver, new IntentFilter(UsbManager.ACTION_USB_DEVICE_DETACHED));
+
+        lowBatteryReceiver = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+
+                if (Intent.ACTION_BATTERY_LOW.equals(action)) {
+                    // notify the user and stuff
+                }
+            }
+        };
+
+        getApplicationContext().registerReceiver(lowBatteryReceiver, new IntentFilter(Intent.ACTION_BATTERY_LOW));
+
+
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         return binder;
@@ -127,6 +143,7 @@ public class RadioService extends Service {
     public void onDestroy() {
         stopForeground(true);
         getApplicationContext().unregisterReceiver(usbDisconnectionReceiver);
+        getApplicationContext().unregisterReceiver(lowBatteryReceiver);
         super.onDestroy();
     }
 
