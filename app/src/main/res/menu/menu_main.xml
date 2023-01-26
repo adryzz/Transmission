@@ -10,7 +10,6 @@
 
     <item
         android:id="@+id/action_antenna0_toggle"
-        android:enabled="false"
         android:visible="false"
         android:icon="@drawable/round_sensors_off_24"
         android:menuCategory="container"
@@ -20,7 +19,6 @@
 
     <item
         android:id="@+id/action_antenna1_toggle"
-        android:enabled="false"
         android:visible="false"
         android:icon="@drawable/round_sensors_off_24"
         android:menuCategory="container"
@@ -30,7 +28,6 @@
 
     <item
         android:id="@+id/action_antenna2_toggle"
-        android:enabled="false"
         android:visible="false"
         android:icon="@drawable/round_sensors_off_24"
         android:menuCategory="container"

@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.transmission.databinding.FragmentFirstBinding;
 
@@ -15,6 +17,7 @@ public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
 
+    private RecyclerView recyclerView;
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -23,12 +26,22 @@ public class FirstFragment extends Fragment {
 
         binding = FragmentFirstBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        recyclerView = view.findViewById(R.id.conversation_list);
+    }
+
+    public void fillView()
+    {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        Conversation[] convos = ((MainActivity)getActivity()).service.getConversations();
+
+        ConversationSelectionAdapter adapter = new ConversationSelectionAdapter(convos);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override

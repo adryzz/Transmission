@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.Menu;
@@ -15,10 +16,13 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceDialogFragmentCompat;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -29,8 +33,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
         if (savedInstanceState == null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(R.id.settings, new SettingsFragment())
                     .commit();
         }
@@ -73,6 +76,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         @Override
         public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+            // this makes sure the new screen is up to date with the service
+
             SettingsActivity activity = (SettingsActivity)getActivity();
 
             if ((activity).isBound) {
@@ -80,6 +85,11 @@ public class SettingsActivity extends AppCompatActivity {
             } else {
                 onServiceDisconnection();
             }
+        }
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
         }
 
         public abstract void onServiceConnection(RadioService service);
@@ -96,14 +106,10 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onServiceConnection(RadioService service) {
-
-        }
+        public void onServiceConnection(RadioService service) { }
 
         @Override
-        public void onServiceDisconnection() {
-
-        }
+        public void onServiceDisconnection() { }
     }
 
     public static class RadioSettingsFragment extends SettingsFragmentBase {

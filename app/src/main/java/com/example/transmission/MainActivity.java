@@ -24,7 +24,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.Person;
 import androidx.core.app.RemoteInput;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -39,9 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
-    private RadioService service;
-
-    private boolean isServiceConnected = false;
+    public RadioService service;
+    public boolean isServiceConnected = false;
 private int a = 69;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,10 +140,16 @@ private int a = 69;
             public void onServiceConnected(ComponentName name, IBinder svc) {
                 service = ((RadioService.RadioServiceBinder)svc).getService();
                 isServiceConnected = true;
+
+                //TODO: find better way
+                FirstFragment fragment = (FirstFragment)getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main).getChildFragmentManager().getFragments().get(0);
+                fragment.fillView();
+
                 int radios = service.getConnectedRadios();
+
                 //Fragment main = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
-                /*
-                Toolbar toolbar = findViewById(R.id.toolbar);
+
+                /*Toolbar toolbar = findViewById(R.id.toolbar);
 
                 Menu menu = toolbar.getMenu();
 

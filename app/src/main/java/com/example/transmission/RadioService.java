@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Binder;
@@ -15,6 +16,8 @@ import android.os.IBinder;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
+import androidx.preference.PreferenceManager;
+
 public class RadioService extends Service {
     public RadioService() {
     }
@@ -49,6 +52,9 @@ public class RadioService extends Service {
             notifText = getString(R.string.persistent_notification_radios, getConnectedRadios());
             usbDevice = device;
         }
+
+        setupPreferences();
+
         startForeground(9, createPersistentNotification(notifText));
         return super.onStartCommand(intent, flags, startId);
     }
@@ -134,6 +140,16 @@ public class RadioService extends Service {
 
     }
 
+    private void setupPreferences() {
+        // setup listener for preference changes
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.registerOnSharedPreferenceChangeListener((sharedPreferences, key) -> {
+            // apply preference
+        });
+
+        // apply current preferences to device
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         return binder;
@@ -165,10 +181,17 @@ public class RadioService extends Service {
     }
 
     public Conversation[] getConversations() {
-        Conversation[] c = new Conversation[1];
-        c[0] = new Conversation();
-        c[0].name = "sela";
+        Conversation[] c = new Conversation[10];
+        for (int i = 0; i < 10; i++)
+        {
+            c[i] = new Conversation();
+            c[i].name = "convo" + i;
+        }
         return c;
+    }
+
+    public void sendMessage(long channelId, String text) {
+
     }
 
     public void setOnMessageReceivedEventListener(MessageReceivedEventListener listener) {
