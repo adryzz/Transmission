@@ -21,7 +21,9 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="title_activity_settings">Settings</string>
-    <string name="large_text">SettinafafsgsActivity</string>
+
+    <string name="edit_message_hint">Transmission message</string>
+    <string name="chat_id_intent_extra">chat_id</string>
 
     <!-- Preferences -->
     <!-- Radio -->

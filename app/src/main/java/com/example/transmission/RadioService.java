@@ -186,6 +186,7 @@ public class RadioService extends Service {
         {
             c[i] = new Conversation();
             c[i].name = "convo" + i;
+            c[i].uid = i;
         }
         return c;
     }

@@ -40,7 +40,7 @@ public class FirstFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         Conversation[] convos = ((MainActivity)getActivity()).service.getConversations();
 
-        ConversationSelectionAdapter adapter = new ConversationSelectionAdapter(convos);
+        ConversationSelectionAdapter adapter = new ConversationSelectionAdapter(convos, getContext());
         recyclerView.setAdapter(adapter);
     }
 

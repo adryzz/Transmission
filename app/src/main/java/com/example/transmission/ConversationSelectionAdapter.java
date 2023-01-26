@@ -1,5 +1,8 @@
 package com.example.transmission;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +14,20 @@ class ConversationSelectionAdapter extends RecyclerView.Adapter<ConversationSele
 
     Conversation[] conversations;
 
-    public ConversationSelectionAdapter(Conversation[] convos){
+    Context context;
+
+    public ConversationSelectionAdapter(Conversation[] convos, Context ctx){
         conversations = convos;
+        context = ctx;
     }
 
     @Override
     public ConversationSelectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.conversation_item, parent, false);
-        return new ConversationSelectionViewHolder(view);
+
+
+        return new ConversationSelectionViewHolder(view, context);
     }
 
     @Override
@@ -46,15 +54,17 @@ class ConversationSelectionAdapter extends RecyclerView.Adapter<ConversationSele
 
         long chatId; // this will be set on bind
 
-        ConversationSelectionViewHolder(View itemView) {
+        ConversationSelectionViewHolder(View itemView, Context context) {
             super(itemView);
             title = itemView.findViewById(R.id.conversation_item_name);
             lastMessage = itemView.findViewById(R.id.conversation_item_last_message);
             timestamp = itemView.findViewById(R.id.conversation_item_timestamp);
             unreadCount = itemView.findViewById(R.id.conversation_item_unread_messages);
 
-            itemView.setOnClickListener(view -> {
-                // launch conversation activity with this conversation id
+            itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(context, ConversationActivity.class);
+                intent.putExtra(context.getString(R.string.chat_id_intent_extra), chatId);
+                context.startActivity(intent);
             });
         }
     }

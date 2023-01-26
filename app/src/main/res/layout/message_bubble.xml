@@ -1,0 +1,66 @@
+<LinearLayout android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/message_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            android:background="@drawable/bubble_shape"
+            android:maxWidth="250dp"
+            android:ellipsize="end"
+            android:text="Your message text goes here" />
+
+        <LinearLayout
+            android:id="@+id/icon_timestamp_frame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_gravity="end"
+            android:paddingRight="12dp"
+            android:paddingBottom="4dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/signal_cellular_4_bar_24"
+                android:scaleType="centerInside"
+                android:adjustViewBounds="true"
+                android:maxWidth="16dp"
+                android:maxHeight="16dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_toEndOf="@id/timestamp_text"
+                android:layout_toRightOf="@id/timestamp_text"/>
+
+            <TextView
+                android:id="@+id/timestamp_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#666"
+                android:textSize="12sp"
+                android:text="12:34 PM"
+                android:textAlignment="viewEnd" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

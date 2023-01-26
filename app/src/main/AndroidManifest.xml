@@ -16,10 +16,13 @@
         android:theme="@style/Theme.Transmission"
         tools:targetApi="31">
         <activity
+            android:name=".ConversationActivity"
+            android:exported="false" />
+        <activity
             android:name=".SettingsActivity"
-            android:parentActivityName=".MainActivity"
             android:exported="false"
-            android:label="@string/title_activity_settings" />
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".MainActivity" />
 
         <service
             android:name=".RadioService"
