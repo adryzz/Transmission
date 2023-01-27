@@ -1,6 +1,8 @@
 package com.example.transmission;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,10 +14,11 @@ import android.os.IBinder;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.List;
 
 public class ConversationActivity extends AppCompatActivity {
-
     private long chatId;
 
     public RadioService service;
@@ -43,6 +46,10 @@ public class ConversationActivity extends AppCompatActivity {
 
         sendButton.setOnClickListener(v -> {
             if (isBound) {
+                if (editText.getText().length() == 0) {
+                    Snackbar.make(editText, "The message is empty!", 500).show();
+                    return;
+                }
                 service.sendMessage(chatId, editText.getText().toString());
                 editText.getText().clear();
                 // TODO: refresh
@@ -59,6 +66,8 @@ public class ConversationActivity extends AppCompatActivity {
         super.onResume();
 
         Intent bindIntent = new Intent(getApplicationContext(), RadioService.class);
+
+        ConversationActivity activity = this;
         ServiceConnection connection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder svc) {
@@ -73,9 +82,16 @@ public class ConversationActivity extends AppCompatActivity {
                 LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
                 layoutManager.setReverseLayout(true);
                 recyclerView.setLayoutManager(layoutManager);
-                List<Message> messages = service.getMessagesForConversation(chatId);
+                LiveData<List<Message>> messages = service.getMessagesForConversation(chatId);
 
-                MessageAdapter adapter = new MessageAdapter(messages, getApplicationContext());
+                MessageAdapter adapter = new MessageAdapter(getApplicationContext(), recyclerView);
+                //adapter.setItems(messages.getValue(), true);
+
+                messages.observe(activity, msg -> {
+                    adapter.setItems(msg, false);
+                    recyclerView.smoothScrollToPosition(0);
+                });
+
                 recyclerView.setAdapter(adapter);
             }
 
@@ -84,7 +100,9 @@ public class ConversationActivity extends AppCompatActivity {
                 isBound = false;
             }
         };
-        bindService(bindIntent, connection, 0);
+        if (!isBound) {
+            bindService(bindIntent, connection, 0);
+        }
     }
 
     @Override

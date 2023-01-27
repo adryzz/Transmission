@@ -16,6 +16,7 @@ import android.os.IBinder;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
+import androidx.lifecycle.LiveData;
 import androidx.preference.PreferenceManager;
 import androidx.room.Room;
 
@@ -243,7 +244,7 @@ public class RadioService extends Service {
         mDao.updateLastMessage(channelId, unixTime, text);
     }
 
-    public List<Message> getMessagesForConversation(long channelId) {
+    public LiveData<List<Message>> getMessagesForConversation(long channelId) {
         MessageDao dao = database.messageDao();
         return dao.getRecentMessages(channelId, 128);
     }
