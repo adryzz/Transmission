@@ -100,5 +100,5 @@
     <string name="settings_repository_label">Repository</string>
     <string name="settings_repository_summary">Click to open the GitHub repository</string>
     <string name="settings_repository_id">repository_button</string>
-    <string name="settings_repository_url">https://github.com/adryzz</string>
+    <string name="settings_repository_url">https://github.com/adryzz/Transmission</string>
 </resources>
