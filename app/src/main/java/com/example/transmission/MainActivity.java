@@ -133,6 +133,15 @@ private int a = 69;
         serviceConnection();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (isServiceConnected) {
+            service.setNotificationStopButtonEnabled(true);
+        }
+    }
+
     void serviceConnection() {
         Intent bindIntent = new Intent(getApplicationContext(), RadioService.class);
         ServiceConnection connection = new ServiceConnection() {

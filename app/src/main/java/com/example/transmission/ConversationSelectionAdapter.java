@@ -2,7 +2,6 @@ package com.example.transmission;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +9,15 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 class ConversationSelectionAdapter extends RecyclerView.Adapter<ConversationSelectionAdapter.ConversationSelectionViewHolder> {
 
-    Conversation[] conversations;
+    List<Conversation> conversations;
 
     Context context;
 
-    public ConversationSelectionAdapter(Conversation[] convos, Context ctx){
+    public ConversationSelectionAdapter(List<Conversation> convos, Context ctx){
         conversations = convos;
         context = ctx;
     }
@@ -33,7 +34,7 @@ class ConversationSelectionAdapter extends RecyclerView.Adapter<ConversationSele
     @Override
     public void onBindViewHolder(ConversationSelectionViewHolder holder, int position) {
         // Bind data for the Conversation item to the views in the ConversationSelectionViewHolder
-        Conversation conversation = conversations[position];
+        Conversation conversation = conversations.get(position);
         holder.title.setText(conversation.name);
         holder.lastMessage.setText(conversation.lastMessageText);
         holder.timestamp.setText("2d");
@@ -43,7 +44,7 @@ class ConversationSelectionAdapter extends RecyclerView.Adapter<ConversationSele
 
     @Override
     public int getItemCount() {
-        return conversations.length;
+        return conversations.size();
     }
 
     class ConversationSelectionViewHolder extends RecyclerView.ViewHolder {

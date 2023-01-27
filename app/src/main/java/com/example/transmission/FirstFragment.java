@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.transmission.databinding.FragmentFirstBinding;
 
+import java.util.List;
+
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
@@ -38,7 +40,7 @@ public class FirstFragment extends Fragment {
     {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        Conversation[] convos = ((MainActivity)getActivity()).service.getConversations();
+        List<Conversation> convos = ((MainActivity)getActivity()).service.getConversations();
 
         ConversationSelectionAdapter adapter = new ConversationSelectionAdapter(convos, getContext());
         recyclerView.setAdapter(adapter);

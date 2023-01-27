@@ -49,6 +49,15 @@ public class SettingsActivity extends AppCompatActivity {
         serviceConnection();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (isBound) {
+            service.setNotificationStopButtonEnabled(true);
+        }
+    }
+
     void serviceConnection() {
         Intent bindIntent = new Intent(getApplicationContext(), RadioService.class);
 
@@ -57,6 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onServiceConnected(ComponentName name, IBinder svc) {
                 service = ((RadioService.RadioServiceBinder)svc).getService();
                 isBound = true;
+                service.setNotificationStopButtonEnabled(false);
                 SettingsFragmentBase fragment = (SettingsFragmentBase)getSupportFragmentManager().findFragmentById(R.id.settings);
                 fragment.onServiceConnection(service);
 

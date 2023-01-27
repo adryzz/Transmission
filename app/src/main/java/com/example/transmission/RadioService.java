@@ -17,6 +17,12 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
 import androidx.preference.PreferenceManager;
+import androidx.room.Room;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.Executors;
 
 public class RadioService extends Service {
     public RadioService() {
@@ -25,8 +31,12 @@ public class RadioService extends Service {
     BroadcastReceiver usbDisconnectionReceiver;
     BroadcastReceiver lowBatteryReceiver;
     UsbDevice usbDevice;
-
     MessageReceivedEventListener messageListener;
+    String notificationText;
+    boolean isStopButtonEnabled = true;
+
+    Random random = new Random();
+    AppDatabase database;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -40,6 +50,13 @@ public class RadioService extends Service {
                 stopSelf();
             }
         }
+        //TODO: fix this
+        Executors.newSingleThreadExecutor().execute(() -> {
+            database = Room.databaseBuilder(getApplicationContext(),
+                    AppDatabase.class, "transmission-database").allowMainThreadQueries().build();
+        });
+
+
         setupIntentReceivers();
 
         UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
@@ -55,11 +72,11 @@ public class RadioService extends Service {
 
         setupPreferences();
 
-        startForeground(9, createPersistentNotification(notifText));
+        startForeground(9, createPersistentNotification(notifText, false));
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private Notification createPersistentNotification(String text) {
+    private Notification createPersistentNotification(String text, boolean addStopButton) {
         // make an intent to start the main UI when pressing on the persistent notification
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent =
@@ -73,7 +90,7 @@ public class RadioService extends Service {
         PendingIntent stopPendingIntent =
                 PendingIntent.getForegroundService(getApplicationContext(),
                         9, stopIntent,
-                        PendingIntent.FLAG_IMMUTABLE);
+                        PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Action stopAction =
                 new NotificationCompat.Action.Builder(R.drawable.round_sensors_24,
@@ -92,18 +109,23 @@ public class RadioService extends Service {
                         .build();
 
         // make the persistent notification
-        Notification notification =
+        NotificationCompat.Builder notification =
                 new NotificationCompat.Builder(this, getString(R.string.persistent_notification_channel_id))
                         .setContentTitle(getText(R.string.persistent_notification_title))
                         .setContentText(text)
                         .setSmallIcon(R.drawable.round_sensors_24)
                         .setContentIntent(pendingIntent)
                         .addAction(settingsAction)
-                        .addAction(stopAction)
-                        .setVibrate(null)
-                        .build();
+                        .setVibrate(null);
 
-        return notification;
+        if (addStopButton) {
+            notification.addAction(stopAction);
+        }
+
+        isStopButtonEnabled = addStopButton;
+        notificationText = text;
+
+        return notification.build();
     }
 
     private void setupIntentReceivers() {
@@ -117,7 +139,7 @@ public class RadioService extends Service {
                         // call your method that cleans up and closes communication with the device
 
                         NotificationManagerCompat.from(getApplicationContext()).notify(9,
-                                createPersistentNotification(getString(R.string.persistent_notification_no_radio)));
+                                createPersistentNotification(getString(R.string.persistent_notification_no_radio), isStopButtonEnabled));
                     }
                 }
             }
@@ -172,6 +194,11 @@ public class RadioService extends Service {
 
     /* SERVICE INTERFACE AAAAAA */
 
+    public void setNotificationStopButtonEnabled(boolean enabled) {
+        NotificationManagerCompat.from(getApplicationContext())
+                .notify(9, createPersistentNotification(notificationText, enabled));
+    }
+
     public int getConnectedRadios() {
         return 2;
     }
@@ -180,19 +207,30 @@ public class RadioService extends Service {
 
     }
 
-    public Conversation[] getConversations() {
-        Conversation[] c = new Conversation[10];
-        for (int i = 0; i < 10; i++)
-        {
-            c[i] = new Conversation();
-            c[i].name = "convo" + i;
-            c[i].uid = i;
-        }
-        return c;
+    public List<Conversation> getConversations() {
+        ConversationDao dao = database.conversationDao();
+        return dao.getAll();
     }
 
     public void sendMessage(long channelId, String text) {
+        long unixTime = Instant.now().getEpochSecond();
+        Message message = new Message();
+        message.conversationId = channelId;
+        message.text = text;
+        message.timestamp = unixTime;
+        message.rssi = 0;
+        message.uid = random.nextLong();
 
+        MessageDao dao = database.messageDao();
+        dao.insert(message);
+
+        ConversationDao mDao = database.conversationDao();
+        mDao.updateLastMessage(channelId, unixTime, text);
+    }
+
+    public List<Message> getMessagesForConversation(long channelId) {
+        MessageDao dao = database.messageDao();
+        return dao.getRecentMessages(channelId, 128);
     }
 
     public void setOnMessageReceivedEventListener(MessageReceivedEventListener listener) {

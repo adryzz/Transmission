@@ -1,15 +1,18 @@
 package com.example.transmission;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+
+import java.util.List;
 
 public class ConversationActivity extends AppCompatActivity {
 
@@ -17,6 +20,8 @@ public class ConversationActivity extends AppCompatActivity {
 
     public RadioService service;
     public boolean isBound = false;
+
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,8 @@ public class ConversationActivity extends AppCompatActivity {
         });
 
         // do stuff
+
+        recyclerView = findViewById(R.id.messages_view);
     }
 
     @Override
@@ -54,8 +61,16 @@ public class ConversationActivity extends AppCompatActivity {
             public void onServiceConnected(ComponentName name, IBinder svc) {
                 service = ((RadioService.RadioServiceBinder)svc).getService();
                 isBound = true;
-
+                service.setNotificationStopButtonEnabled(false);
                 // load messages
+
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+                layoutManager.setStackFromEnd(true);
+                recyclerView.setLayoutManager(layoutManager);
+                List<Message> messages = service.getMessagesForConversation(chatId);
+
+                MessageAdapter adapter = new MessageAdapter(messages, getApplicationContext());
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
@@ -64,5 +79,14 @@ public class ConversationActivity extends AppCompatActivity {
             }
         };
         bindService(bindIntent, connection, 0);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (isBound) {
+            service.setNotificationStopButtonEnabled(true);
+        }
     }
 }
