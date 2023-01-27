@@ -5,10 +5,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +26,10 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceDialogFragmentCompat;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
+
+import com.google.android.material.snackbar.Snackbar;
+
+import java.util.List;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -108,11 +115,34 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public static class SettingsFragment extends SettingsFragmentBase {
+
+        int versionClicks = 0;
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
             super.onCreatePreferences(savedInstanceState, rootKey);
+
+            Preference credits = findPreference(getString(R.string.settings_version_id));
+
+            credits.setOnPreferenceClickListener(preference -> {
+                versionClicks++;
+                if (versionClicks == 7) {
+                    // easter egg
+                    Toast.makeText(getContext(), getString(R.string.settings_version_easter_egg_text), Toast.LENGTH_SHORT).show();
+                }
+                return versionClicks == 7;
+            });
+
+            Preference repo = findPreference(getString(R.string.settings_repository_id));
+
+            repo.setOnPreferenceClickListener(preference -> {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(getString(R.string.settings_repository_url)));
+
+                startActivity(intent);
+                return false;
+            });
         }
 
         @Override
@@ -186,6 +216,31 @@ public class SettingsActivity extends AppCompatActivity {
             radio1.setTitle(getText(R.string.settings_category_radio1_disconnected_name));
             radio2.setEnabled(false);
             radio2.setTitle(getText(R.string.settings_category_radio2_disconnected_name));
+        }
+    }
+
+    public static class MessageSettingsFragment extends SettingsFragmentBase {
+
+        @Override
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            setPreferencesFromResource(R.xml.message_preferences, rootKey);
+
+            super.onCreatePreferences(savedInstanceState, rootKey);
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+        }
+
+        @Override
+        public void onServiceConnection(RadioService service) {
+
+        }
+
+        @Override
+        public void onServiceDisconnection() {
+
         }
     }
 }

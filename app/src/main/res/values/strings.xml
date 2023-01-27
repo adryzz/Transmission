@@ -26,6 +26,9 @@
     <string name="chat_id_intent_extra">chat_id</string>
 
     <!-- Preferences -->
+    <string name="settings_main_category_label">Transmission settings</string>
+    <string name="settings_main_category_id">main_category</string>
+
     <!-- Radio -->
     <string name="settings_category_radio">Radio</string>
     <string name="settings_category_radio_id">radio_fragment_button</string>
@@ -76,4 +79,26 @@
     <string name="settings_reset_radio_dialog_message">This action cannot be reverted!</string>
     <string name="settings_reset_radio_dialog_cancel_text">Cancel</string>
     <string name="settings_reset_radio_dialog_reset_text">Reset</string>
+
+    <!-- Messages -->
+
+    <string name="settings_category_messages">Messages</string>
+    <string name="settings_category_messages_id">messages_fragment_button</string>
+
+    <!-- Credits -->
+    <string name="settings_credits_category_label">Credits</string>
+    <string name="settings_credits_category_id">credits_category</string>
+
+    <!-- Version -->
+    <string name="settings_version_label">Transmission v1.0.0</string>
+    <string name="settings_version_summary">by Lena with &lt;3</string>
+    <string name="settings_version_id">version_button</string>
+    <string name="settings_version_easter_egg_text">\ud83c\udff3\ufe0f\u200d\ud83c\udf08\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f\ud83d\udc9c</string>
+
+    <!-- Repository -->
+
+    <string name="settings_repository_label">Repository</string>
+    <string name="settings_repository_summary">Click to open the GitHub repository</string>
+    <string name="settings_repository_id">repository_button</string>
+    <string name="settings_repository_url">https://github.com/adryzz</string>
 </resources>
