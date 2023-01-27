@@ -12,7 +12,7 @@ public interface ConversationDao {
     @Insert
     void insert(Conversation conversation);
 
-    @Query("SELECT * FROM conversation")
+    @Query("SELECT * FROM conversation ORDER BY last_message_timestamp DESC")
     List<Conversation> getAll();
 
     @Query("SELECT * FROM conversation WHERE uid = :conversationId")

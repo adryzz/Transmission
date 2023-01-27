@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.List;
 
 class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
@@ -18,6 +20,7 @@ class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHold
     Context context;
 
     long lastTime = Long.MAX_VALUE;
+    int lastFlags = Integer.MAX_VALUE;
 
     public MessageAdapter(List<Message> msg, Context ctx){
         messages = msg;
@@ -40,20 +43,24 @@ class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHold
         holder.text.setText(message.text);
         holder.timestamp.setText(Utils.timestampToText(message.timestamp));
 
-        if (lastTime - message.timestamp > 300) {
-            //TODO: set up flags properly
-            if (message.flags != 2) {
+        if (lastTime - message.timestamp > 300 || message.flags != lastFlags) {
+            if (!Utils.getFlag(message.flags, Message.FLAG_NOT_SENT)) {
                 holder.icon.setImageDrawable(context.getDrawable(Utils.rssiToIconId(message.rssi)));
             }
             else {
                 //TODO: move bubble to the right
-                //TODO: read flags
+                if (Utils.getFlag(message.flags, Message.FLAG_RECEIVED)) {
+                    holder.icon.setImageDrawable(context.getDrawable(R.drawable.round_check_circle_24));
+                } else if (Utils.getFlag(message.flags, Message.FLAG_SENT)) {
+                    holder.icon.setImageDrawable(context.getDrawable(R.drawable.round_check_circle_outline_24));
+                }
                 holder.icon.setImageDrawable(context.getDrawable(R.drawable.round_schedule_24));
             }
         } else {
             holder.timestampIconView.setVisibility(View.GONE);
         }
         lastTime = message.timestamp;
+        lastFlags = message.flags;
     }
 
     @Override
@@ -75,6 +82,12 @@ class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHold
             timestamp = itemView.findViewById(R.id.timestamp_text);
             icon = itemView.findViewById(R.id.message_icon);
             timestampIconView = itemView.findViewById(R.id.icon_timestamp_frame);
+
+            itemView.setOnLongClickListener(v -> {
+                Snackbar.make(itemView, "This should open a menu or something idk", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                return true;
+            });
         }
     }
 }

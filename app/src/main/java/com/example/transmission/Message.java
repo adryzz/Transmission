@@ -24,4 +24,10 @@ public class Message {
 
     @ColumnInfo(name = "flags")
     public int flags;
+
+    public static final int FLAG_NOT_SENT = 2;
+    public static final int FLAG_SENT = 4;
+    public static final int FLAG_RECEIVED = 8;
+
+    public static final int FLAG_READ = 16;
 }

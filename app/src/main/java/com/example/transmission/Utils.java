@@ -46,4 +46,16 @@ public class Utils {
         }
         return R.drawable.signal_cellular_0_bar_24;
     }
+
+    public static int setFlag(int source, int flag) {
+        return source | flag;
+    }
+
+    public static int unsetFlag(int source, int flag) {
+        return source & ~flag;
+    }
+
+    public static boolean getFlag(int source, int flag) {
+        return (source & flag) == flag;
+    }
 }

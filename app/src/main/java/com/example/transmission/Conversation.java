@@ -21,4 +21,7 @@ public class Conversation {
 
     @ColumnInfo(name = "creation_timestamp")
     public long creationTimestamp;
+
+    @ColumnInfo(name = "unread_messages")
+    public int unreadMessages;
 }

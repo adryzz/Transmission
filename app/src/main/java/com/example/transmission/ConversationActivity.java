@@ -23,6 +23,8 @@ public class ConversationActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
 
+    Conversation currentConversation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +45,7 @@ public class ConversationActivity extends AppCompatActivity {
             if (isBound) {
                 service.sendMessage(chatId, editText.getText().toString());
                 editText.getText().clear();
+                // TODO: refresh
             }
         });
 
@@ -62,10 +65,13 @@ public class ConversationActivity extends AppCompatActivity {
                 service = ((RadioService.RadioServiceBinder)svc).getService();
                 isBound = true;
                 service.setNotificationStopButtonEnabled(false);
+
+                currentConversation = service.getConversation(chatId);
+                getSupportActionBar().setTitle(currentConversation.name);
                 // load messages
 
                 LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-                layoutManager.setStackFromEnd(true);
+                layoutManager.setReverseLayout(true);
                 recyclerView.setLayoutManager(layoutManager);
                 List<Message> messages = service.getMessagesForConversation(chatId);
 

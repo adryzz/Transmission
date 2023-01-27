@@ -61,6 +61,11 @@ private int a = 69;
             Snackbar.make(view, "This should in theory open the menu to add a new conversation, but it's clearly not implemented yet.", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
 
+            if (isServiceConnected) {
+                service.createConversation("sela");
+                // TODO: refresh
+            }
+
             String replyLabel = getResources().getString(R.string.reply_label);
             RemoteInput remoteInput = new RemoteInput.Builder("KEY_TEXT_REPLY")
                     .setLabel(replyLabel)

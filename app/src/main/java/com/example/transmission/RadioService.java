@@ -212,6 +212,20 @@ public class RadioService extends Service {
         return dao.getAll();
     }
 
+    public Conversation getConversation(long id) {
+        ConversationDao dao = database.conversationDao();
+        return dao.getConversation(id);
+    }
+
+    public void createConversation(String name) {
+        ConversationDao dao = database.conversationDao();
+        Conversation c = new Conversation();
+        c.uid = random.nextLong();
+        c.creationTimestamp = Instant.now().getEpochSecond();
+        c.name = name;
+        dao.insert(c);
+    }
+
     public void sendMessage(long channelId, String text) {
         long unixTime = Instant.now().getEpochSecond();
         Message message = new Message();
@@ -220,6 +234,7 @@ public class RadioService extends Service {
         message.timestamp = unixTime;
         message.rssi = 0;
         message.uid = random.nextLong();
+        message.flags = Message.FLAG_RECEIVED;
 
         MessageDao dao = database.messageDao();
         dao.insert(message);

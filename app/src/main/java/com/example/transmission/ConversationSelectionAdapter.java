@@ -37,8 +37,14 @@ class ConversationSelectionAdapter extends RecyclerView.Adapter<ConversationSele
         Conversation conversation = conversations.get(position);
         holder.title.setText(conversation.name);
         holder.lastMessage.setText(conversation.lastMessageText);
-        holder.timestamp.setText("2d");
-        holder.unreadCount.setText("2");
+        holder.timestamp.setText(Utils.timestampToText(conversation.lastMessageTimestamp));
+        if (conversation.lastMessageTimestamp == 0) {
+            holder.timestamp.setVisibility(View.GONE);
+        }
+        holder.unreadCount.setText(Integer.toString(conversation.unreadMessages));
+        if (conversation.unreadMessages == 0) {
+            holder.unreadCount.setVisibility(View.GONE);
+        }
         holder.chatId = conversation.uid;
     }
 
