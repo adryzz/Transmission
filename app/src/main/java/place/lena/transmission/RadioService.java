@@ -119,7 +119,9 @@ public class RadioService extends Service {
                         .setSmallIcon(R.drawable.round_sensors_24)
                         .setContentIntent(pendingIntent)
                         .addAction(settingsAction)
-                        .setVibrate(null);
+                        .setOnlyAlertOnce(true)
+                        .setVibrate(new long[] { 0L })
+                        .setSound(null);
 
         if (addStopButton) {
             notification.addAction(stopAction);

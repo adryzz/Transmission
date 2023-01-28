@@ -1,5 +1,6 @@
 package place.lena.transmission;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -7,13 +8,16 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import place.lena.transmission.R;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.IBinder;
@@ -23,6 +27,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.Person;
 import androidx.core.app.RemoteInput;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -39,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
     public RadioService service;
     public boolean isServiceConnected = false;
-private int a = 69;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,61 +66,29 @@ private int a = 69;
 
             if (isServiceConnected) {
                 service.createConversation("sela");
-                // TODO: refresh
             }
-
-            String replyLabel = getResources().getString(R.string.reply_label);
-            RemoteInput remoteInput = new RemoteInput.Builder("KEY_TEXT_REPLY")
-                    .setLabel(replyLabel)
-                    .build();
-
-            Intent i = new Intent(getApplicationContext(), MainActivity.class);
-
-            PendingIntent replyPendingIntent =
-                    PendingIntent.getBroadcast(getApplicationContext(),
-                            a,
-                            i,
-                            PendingIntent.FLAG_UPDATE_CURRENT);
-
-            NotificationCompat.Action action =
-                    new NotificationCompat.Action.Builder(R.drawable.round_add_24,
-                            getString(R.string.reply_label), replyPendingIntent)
-                            .addRemoteInput(remoteInput)
-                            .build();
-
-            Person p = new Person.Builder().setName("sela").setBot(true).build();
-            Person n = new Person.Builder().setName("me").setBot(true).build();
-            Notification notification = new NotificationCompat.Builder(getApplicationContext(), getString(R.string.messages_notification_channel_id))
-                    .setStyle(new NotificationCompat.MessagingStyle(n)
-                            .setConversationTitle("sela")
-                            .addMessage("aaaa", 1, n) // Pass in null for user.
-                            .addMessage("amogus sus?", 2, p)
-                            .addMessage("sussy", 3, n)
-                            .addMessage("yes sussy amogus sus", 4, p))
-                    .addAction(action)
-                    .setSmallIcon(R.drawable.signal_cellular_4_bar_24)
-                    .setGroup("KEY_TEXT_REPLY")
-                    .setColor(getColor(R.color.purple_500))
-                    .setAutoCancel(true)
-                    .build();
-
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
-            notificationManager.notify(a, notification);
-
-            a++;
         });
     }
 
     private void createNotificationChannels() {
+        // ask for permissions in android 13
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+        requestPermissions(
+                new String[] { Manifest.permission.POST_NOTIFICATIONS },
+                0);
+
         // messages channel
         NotificationChannel messagesChannel = new NotificationChannel(getString(R.string.messages_notification_channel_id), getString(R.string.messages_notification_channel_name), NotificationManager.IMPORTANCE_DEFAULT);
         messagesChannel.setDescription(getString(R.string.messages_notification_channel_description));
-        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+
         notificationManager.createNotificationChannel(messagesChannel);
 
         // persistent notification channel
-        NotificationChannel persistentChannel = new NotificationChannel(getString(R.string.persistent_notification_channel_id), getString(R.string.persistent_notification_channel_name), NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationChannel persistentChannel = new NotificationChannel(getString(R.string.persistent_notification_channel_id), getString(R.string.persistent_notification_channel_name), NotificationManager.IMPORTANCE_LOW);
         persistentChannel.setDescription(getString(R.string.persistent_notification_channel_description));
+        persistentChannel.setSound(null, null);
+        persistentChannel.enableVibration(false);
         notificationManager.createNotificationChannel(persistentChannel);
     }
 

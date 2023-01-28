@@ -1,6 +1,7 @@
 package place.lena.transmission;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,7 @@ class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHold
             }
             else {
                 //TODO: move bubble to the right
+
                 if (Utils.getFlag(message.flags, Message.FLAG_RECEIVED)) {
                     holder.icon.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.round_check_circle_24));
                 } else if (Utils.getFlag(message.flags, Message.FLAG_SENT)) {
