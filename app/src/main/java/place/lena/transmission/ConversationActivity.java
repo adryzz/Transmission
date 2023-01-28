@@ -2,6 +2,7 @@ package place.lena.transmission;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,13 +47,18 @@ public class ConversationActivity extends AppCompatActivity {
 
         sendButton.setOnClickListener(v -> {
             if (isBound) {
-                if (editText.getText().length() == 0) {
+                String text = editText.getText().toString();
+
+                // trim text if the preferences say so
+                if (Utils.getPreferenceBool(this, R.string.settings_text_auto_trim_id, R.bool.settings_text_auto_trim)) {
+                    text = text.trim();
+                }
+                if (text.length() == 0) {
                     Snackbar.make(editText, "The message is empty!", 500).show();
                     return;
                 }
-                service.sendMessage(chatId, editText.getText().toString());
+                service.sendMessage(chatId, text);
                 editText.getText().clear();
-                // TODO: refresh
             }
         });
 

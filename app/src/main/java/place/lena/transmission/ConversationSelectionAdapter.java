@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import place.lena.transmission.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class ConversationSelectionAdapter extends RecyclerView.Adapter<ConversationSelectionAdapter.ConversationSelectionViewHolder> {
@@ -19,8 +20,8 @@ class ConversationSelectionAdapter extends RecyclerView.Adapter<ConversationSele
 
     Context context;
 
-    public ConversationSelectionAdapter(List<Conversation> convos, Context ctx){
-        conversations = convos;
+    public ConversationSelectionAdapter(Context ctx){
+        conversations = new ArrayList<Conversation>();
         context = ctx;
     }
 
@@ -53,6 +54,16 @@ class ConversationSelectionAdapter extends RecyclerView.Adapter<ConversationSele
     @Override
     public int getItemCount() {
         return conversations.size();
+    }
+
+    public void setItems(List<Conversation> convos, boolean fullUpdate) {
+        conversations = convos;
+
+        if (fullUpdate) {
+            notifyDataSetChanged();
+        } else {
+            notifyItemInserted(convos.size() - 1);
+        }
     }
 
     class ConversationSelectionViewHolder extends RecyclerView.ViewHolder {

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,9 +41,13 @@ public class FirstFragment extends Fragment {
     {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        List<Conversation> convos = ((MainActivity)getActivity()).service.getConversations();
+        LiveData<List<Conversation>> convos = ((MainActivity)getActivity()).service.getConversations();
 
-        ConversationSelectionAdapter adapter = new ConversationSelectionAdapter(convos, getContext());
+        ConversationSelectionAdapter adapter = new ConversationSelectionAdapter(getContext());
+        convos.observe(getActivity(), cvs -> {
+            adapter.setItems(cvs, false);
+            recyclerView.smoothScrollToPosition(0);
+        });
         recyclerView.setAdapter(adapter);
     }
 

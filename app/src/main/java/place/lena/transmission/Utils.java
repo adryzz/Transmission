@@ -2,6 +2,8 @@ package place.lena.transmission;
 
 import android.content.Context;
 
+import androidx.preference.PreferenceManager;
+
 import place.lena.transmission.R;
 
 import java.time.Instant;
@@ -65,5 +67,15 @@ public class Utils {
 
     public static void clearSettings(Context context, int resId) {
         
+    }
+
+    public static boolean getPreferenceBool(Context ctx, int id, int defaultId) {
+        return PreferenceManager.getDefaultSharedPreferences(ctx).
+                getBoolean(ctx.getString(id), ctx.getResources().getBoolean(defaultId));
+    }
+
+    public static int getPreferenceInt(Context ctx, int id, int defaultId) {
+        return PreferenceManager.getDefaultSharedPreferences(ctx).
+                getInt(ctx.getString(id), ctx.getResources().getInteger(defaultId));
     }
 }

@@ -210,7 +210,7 @@ public class RadioService extends Service {
 
     }
 
-    public List<Conversation> getConversations() {
+    public LiveData<List<Conversation>> getConversations() {
         ConversationDao dao = database.conversationDao();
         return dao.getAll();
     }

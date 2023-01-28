@@ -1,5 +1,6 @@
 package place.lena.transmission;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -13,7 +14,7 @@ public interface ConversationDao {
     void insert(Conversation conversation);
 
     @Query("SELECT * FROM conversation ORDER BY last_message_timestamp DESC")
-    List<Conversation> getAll();
+    LiveData<List<Conversation>> getAll();
 
     @Query("SELECT * FROM conversation WHERE uid = :conversationId")
     Conversation getConversation(long conversationId);
