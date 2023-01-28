@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <EditTextPreference
+        app:key="@string/settings_name_id"
+        app:title="@string/settings_name_label"
+        app:useSimpleSummaryProvider="true" />
+    <Preference app:summary="@string/settings_name_summary"></Preference>
+
     <SwitchPreference
         app:defaultValue="@bool/settings_text_auto_trim"
         app:key="@string/settings_text_auto_trim_id"

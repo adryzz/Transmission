@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         createNotificationChannels();
 
+
         setSupportActionBar(binding.toolbar);
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -61,11 +62,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         binding.fab.setOnClickListener(view -> {
-            Snackbar.make(view, "This should in theory open the menu to add a new conversation, but it's clearly not implemented yet.", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+            Snackbar.make(view, "This should in theory open the menu to add a new conversation, but it's clearly not implemented yet.", Snackbar.LENGTH_LONG).show();
 
             if (isServiceConnected) {
                 service.createConversation("sela");
+                Intent i = new Intent(this, NewConversationActivity.class);
+                startActivity(i);
             }
         });
     }
@@ -74,9 +76,11 @@ public class MainActivity extends AppCompatActivity {
         // ask for permissions in android 13
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
-        requestPermissions(
-                new String[] { Manifest.permission.POST_NOTIFICATIONS },
-                0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissions(
+                    new String[] { Manifest.permission.POST_NOTIFICATIONS },
+                    0);
+        }
 
         // messages channel
         NotificationChannel messagesChannel = new NotificationChannel(getString(R.string.messages_notification_channel_id), getString(R.string.messages_notification_channel_name), NotificationManager.IMPORTANCE_DEFAULT);

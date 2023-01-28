@@ -34,7 +34,7 @@
             android:id="@+id/message_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/signal_cellular_4_bar_24"
+            android:src="@drawable/round_signal_cellular_4_bar_24"
             android:scaleType="centerInside"
             android:adjustViewBounds="true"
             android:maxWidth="16dp"

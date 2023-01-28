@@ -2,10 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-feature android:name="android.hardware.usb.host" />
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -17,22 +22,26 @@
         android:theme="@style/Theme.Transmission"
         tools:targetApi="31">
         <activity
-            android:name="place.lena.transmission.ConversationActivity"
-            android:exported="true"
-            android:parentActivityName="place.lena.transmission.MainActivity"/>
+            android:name=".NewConversationActivity"
+            android:parentActivityName=".MainActivity"
+            android:exported="false" />
         <activity
-            android:name="place.lena.transmission.SettingsActivity"
+            android:name=".ConversationActivity"
+            android:exported="true"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings"
-            android:parentActivityName="place.lena.transmission.MainActivity" />
+            android:parentActivityName=".MainActivity" />
 
         <service
-            android:name="place.lena.transmission.RadioService"
+            android:name=".RadioService"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name="place.lena.transmission.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Transmission.NoActionBar">

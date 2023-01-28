@@ -36,21 +36,21 @@ public class Utils {
 
     static int rssiToIconId(int rssi){
         if (rssi >= -55){
-            return R.drawable.signal_cellular_4_bar_24;
+            return R.drawable.round_signal_cellular_4_bar_24;
         }
 
         if (rssi >= -66){
-            return R.drawable.signal_cellular_3_bar_24;
+            return R.drawable.round_signal_cellular_3_bar_24;
         }
 
         if (rssi >= -77){
-            return R.drawable.signal_cellular_2_bar_24;
+            return R.drawable.round_signal_cellular_2_bar_24;
         }
 
         if (rssi >= -88){
-            return R.drawable.signal_cellular_1_bar_24;
+            return R.drawable.round_signal_cellular_1_bar_24;
         }
-        return R.drawable.signal_cellular_0_bar_24;
+        return R.drawable.round_signal_cellular_0_bar_24;
     }
 
     public static int setFlag(int source, int flag) {

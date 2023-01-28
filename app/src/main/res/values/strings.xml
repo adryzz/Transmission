@@ -84,6 +84,10 @@
     <string name="settings_category_messages">Messages</string>
     <string name="settings_category_messages_id">messages_fragment_button</string>
 
+    <string name="settings_name_label">Name</string>
+    <string name="settings_name_summary">The name that will be displayed to other users when you make a new conversation.\nNote: changing it does not apply it to other users after starting a conversation.</string>
+    <string name="settings_name_id">settings_name</string>
+
     <string name="settings_text_auto_trim_label">Trim messages on send</string>
     <string name="settings_text_auto_trim_summary">Removes trailing and heading spaces and other control/invisible characters when sending a message</string>
     <string name="settings_text_auto_trim_id">text_auto_trim_switch</string>

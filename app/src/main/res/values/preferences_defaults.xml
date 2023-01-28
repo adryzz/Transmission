@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <bool name="settings_text_auto_trim">true</bool>
+    <string name="settings_name">cute user</string>
 </resources>
