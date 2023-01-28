@@ -1,35 +1,23 @@
-package com.example.transmission;
+package place.lena.transmission;
 
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
-import androidx.preference.PreferenceDialogFragmentCompat;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
-import com.google.android.material.snackbar.Snackbar;
-
-import java.util.List;
+import place.lena.transmission.R;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -174,7 +162,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                         })
                         .setPositiveButton(R.string.settings_reset_radio_dialog_reset_text, (dialog, which) -> {
-
+                            PreferenceManager.setDefaultValues(requireContext(), R.xml.radio_preferences, true);
                         })
                         .show();
                 return true;
@@ -226,6 +214,47 @@ public class SettingsActivity extends AppCompatActivity {
             setPreferencesFromResource(R.xml.message_preferences, rootKey);
 
             super.onCreatePreferences(savedInstanceState, rootKey);
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+        }
+
+        @Override
+        public void onServiceConnection(RadioService service) {
+
+        }
+
+        @Override
+        public void onServiceDisconnection() {
+
+        }
+    }
+
+    public static class AdvancedSettingsFragment extends SettingsFragmentBase {
+
+        @Override
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            setPreferencesFromResource(R.xml.advanced_preferences, rootKey);
+
+            super.onCreatePreferences(savedInstanceState, rootKey);
+
+            Preference button = findPreference(getString(R.string.settings_reset_advanced_button_id));
+            button.setOnPreferenceClickListener(preference -> {
+                new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.settings_reset_advanced_dialog_title)
+                        .setCancelable(true)
+                        .setMessage(R.string.settings_reset_advanced_dialog_message)
+                        .setNeutralButton(R.string.settings_reset_advanced_dialog_cancel_text, (dialog, which) -> {
+
+                        })
+                        .setPositiveButton(R.string.settings_reset_advanced_dialog_reset_text, (dialog, which) -> {
+                            PreferenceManager.setDefaultValues(requireContext(), R.xml.advanced_preferences, true);
+                        })
+                        .show();
+                return true;
+            });
         }
 
         @Override

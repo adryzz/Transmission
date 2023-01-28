@@ -1,4 +1,4 @@
-package com.example.transmission;
+package place.lena.transmission;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;

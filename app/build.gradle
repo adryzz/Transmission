@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.transmission'
+    namespace 'place.lena.transmission'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.transmission"
+        applicationId "place.lena.transmission"
         minSdk 30
         targetSdk 33
         versionCode 1

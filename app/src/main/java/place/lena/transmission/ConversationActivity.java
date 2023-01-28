@@ -1,8 +1,7 @@
-package com.example.transmission;
+package place.lena.transmission;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,6 +13,7 @@ import android.os.IBinder;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import place.lena.transmission.R;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;

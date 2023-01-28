@@ -1,4 +1,4 @@
-package com.example.transmission;
+package place.lena.transmission;
 
 import org.junit.Test;
 

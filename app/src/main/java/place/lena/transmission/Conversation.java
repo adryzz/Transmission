@@ -1,4 +1,4 @@
-package com.example.transmission;
+package place.lena.transmission;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

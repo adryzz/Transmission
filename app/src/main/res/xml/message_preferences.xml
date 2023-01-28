@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <SwitchPreference
+        app:defaultValue="true"
+        app:key="@string/settings_text_auto_trim_id"
+        app:title="@string/settings_text_auto_trim_label"
+        app:summary="@string/settings_text_auto_trim_summary"/>
 
 </PreferenceScreen>

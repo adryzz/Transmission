@@ -1,4 +1,4 @@
-package com.example.transmission;
+package place.lena.transmission;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -11,15 +11,14 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 
+import place.lena.transmission.R;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.IBinder;
 import android.view.MenuItem;
-import android.view.View;
 
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.Person;
@@ -29,7 +28,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.transmission.databinding.ActivityMainBinding;
+import place.lena.transmission.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 

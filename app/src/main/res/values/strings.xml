@@ -84,6 +84,27 @@
     <string name="settings_category_messages">Messages</string>
     <string name="settings_category_messages_id">messages_fragment_button</string>
 
+    <string name="settings_text_auto_trim_label">Trim messages on send</string>
+    <string name="settings_text_auto_trim_summary">Removes trailing and heading spaces and other control/invisible characters when sending a message</string>
+    <string name="settings_text_auto_trim_id">text_auto_trim_switch</string>
+
+    <!-- Advanced -->
+    <string name="settings_category_advanced">Advanced</string>
+    <string name="settings_category_advanced_id">advanced_fragment_button</string>
+    <string name="settings_category_processing">Processing</string>
+
+    <string name="settings_packet_compression_level_label">Packet compression level</string>
+    <string name="settings_packet_compression_level_summary">Increasing this may give more throughput, but it may also heavily increase memory, CPU and battery usage. A good balance can improve speed and battery life.</string>
+    <string name="settings_packet_compression_level_id">packet_compression_level_bar</string>
+
+    <string name="settings_reset_advanced_button_label">Reset all advanced settings to defaults</string>
+    <string name="settings_reset_advanced_button_summary">Resets all advanced settings to the app defaults</string>
+    <string name="settings_reset_advanced_button_id">reset_all_advanced_settings_button</string>
+    <string name="settings_reset_advanced_dialog_title">Reset all advanced settings to app defaults?</string>
+    <string name="settings_reset_advanced_dialog_message">This action cannot be reverted!</string>
+    <string name="settings_reset_advanced_dialog_cancel_text">Cancel</string>
+    <string name="settings_reset_advanced_dialog_reset_text">Reset</string>
+
     <!-- Credits -->
     <string name="settings_credits_category_label">Credits</string>
     <string name="settings_credits_category_id">credits_category</string>

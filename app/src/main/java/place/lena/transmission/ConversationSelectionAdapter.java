@@ -1,4 +1,4 @@
-package com.example.transmission;
+package place.lena.transmission;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import place.lena.transmission.R;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.transmission;
+package place.lena.transmission;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
 
+import place.lena.transmission.R;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
-        // Bind data for the Conversation item to the views in the MessageViewHolder
+        // Bind data for the Message item to the views in the MessageViewHolder
         Message message = messages.get(position);
         holder.text.setText(message.text);
         holder.timestamp.setText(Utils.timestampToText(message.timestamp));
@@ -68,10 +69,16 @@ class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHold
 
         // handle updates
         if (position == 0) {
-            if (message.timestamp - messages.get(1).timestamp < 300) {
-                MessageViewHolder previous = (MessageViewHolder)recyclerView.findViewHolderForAdapterPosition(1);
-                if (previous != null) {
-                    previous.timestampIconView.setVisibility(View.GONE);
+            if (messages.size() > 1) {
+                if (message.timestamp - messages.get(1).timestamp < 300) {
+                    MessageViewHolder previous = (MessageViewHolder)recyclerView.findViewHolderForAdapterPosition(1);
+
+                    // since the elements go from 0 to the top, and every time a new element
+                    // is present it takes the spot 0, when counting this way when first loading
+                    // the view, the second item isn't initialized yet, so it's null, and we need to handle that.
+                    if (previous != null) {
+                        previous.timestampIconView.setVisibility(View.GONE);
+                    }
                 }
             }
         }

@@ -8,13 +8,19 @@
         app:title="@string/settings_category_radio"
         app:key="@string/settings_category_radio_id"
         app:icon="@drawable/round_leak_add_24"
-        app:fragment="com.example.transmission.SettingsActivity$RadioSettingsFragment" />
+        app:fragment="place.lena.transmission.SettingsActivity$RadioSettingsFragment" />
 
     <Preference
         app:title="@string/settings_category_messages"
         app:key="@string/settings_category_messages_id"
         app:icon="@drawable/round_message_24"
-        app:fragment="com.example.transmission.SettingsActivity$MessageSettingsFragment" />
+        app:fragment="place.lena.transmission.SettingsActivity$MessageSettingsFragment" />
+
+        <Preference
+            app:title="@string/settings_category_advanced"
+            app:key="@string/settings_category_advanced_id"
+            app:icon="@drawable/round_settings_ethernet_24"
+            app:fragment="place.lena.transmission.SettingsActivity$AdvancedSettingsFragment" />
 
     </PreferenceCategory>
 

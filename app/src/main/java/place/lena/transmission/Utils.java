@@ -1,4 +1,8 @@
-package com.example.transmission;
+package place.lena.transmission;
+
+import android.content.Context;
+
+import place.lena.transmission.R;
 
 import java.time.Instant;
 
@@ -57,5 +61,9 @@ public class Utils {
 
     public static boolean getFlag(int source, int flag) {
         return (source & flag) == flag;
+    }
+
+    public static void clearSettings(Context context, int resId) {
+        
     }
 }

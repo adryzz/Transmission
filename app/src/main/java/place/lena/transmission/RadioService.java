@@ -1,4 +1,4 @@
-package com.example.transmission;
+package place.lena.transmission;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -19,6 +19,8 @@ import androidx.core.app.TaskStackBuilder;
 import androidx.lifecycle.LiveData;
 import androidx.preference.PreferenceManager;
 import androidx.room.Room;
+
+import place.lena.transmission.R;
 
 import java.time.Instant;
 import java.util.List;

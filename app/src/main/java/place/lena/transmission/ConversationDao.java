@@ -1,4 +1,4 @@
-package com.example.transmission;
+package place.lena.transmission;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
