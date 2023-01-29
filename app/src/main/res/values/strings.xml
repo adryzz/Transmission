@@ -125,4 +125,8 @@
     <string name="settings_repository_summary">Click to open the GitHub repository</string>
     <string name="settings_repository_id">repository_button</string>
     <string name="settings_repository_url">https://github.com/adryzz/Transmission</string>
+
+    <!-- New Conversation -->
+    <string name="qr_code_scan_button_label">Scan Conversation QR code</string>
+    <string name="qr_code_generate_button_label">Generate Conversation QR code</string>
 </resources>

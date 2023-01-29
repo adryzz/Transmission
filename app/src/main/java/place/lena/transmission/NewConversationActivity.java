@@ -11,7 +11,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.zxing.Result;
+import com.google.zxing.client.result.ResultParser;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Random;
 
 public class NewConversationActivity extends AppCompatActivity {
 
@@ -32,7 +38,18 @@ public class NewConversationActivity extends AppCompatActivity {
 
         Button gen = findViewById(R.id.generate_qr_button);
         gen.setOnClickListener(v -> {
-            Snackbar.make(scan, "QR code scanning or generation not implemented yet.", Snackbar.LENGTH_LONG).show();
+
+            //TODO: make it actually generate useful stuff
+            Random rng = new Random();
+            byte[] arr = new byte[128];
+            rng.nextBytes(arr);
+            ImageView view = findViewById(R.id.qr_view);
+            Bitmap bmp = Utils.generateQRCode(new String(arr, StandardCharsets.UTF_8), 512, 512);
+            if (bmp == null) {
+                Snackbar.make(scan, "Error while generating QR code.", Snackbar.LENGTH_LONG).show();
+                return;
+            }
+            view.setImageBitmap(bmp);
         });
     }
 
@@ -48,9 +65,14 @@ public class NewConversationActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             // Do something with the image, such as displaying it in an ImageView.
-            ImageView view = findViewById(R.id.qr_view);
-            view.setImageBitmap(imageBitmap);
-            Snackbar.make(view, "QR code scanning or generation not implemented yet.", Snackbar.LENGTH_LONG).show();
+            Result res = Utils.scanQRCode(imageBitmap);
+
+            if (res == null) {
+                Snackbar.make(findViewById(R.id.generate_qr_button), "Couldn't read QR code.", Snackbar.LENGTH_LONG).show();
+                return;
+            }
+
+            //TODO: do stuff with the QR code
         }
     }
 }
