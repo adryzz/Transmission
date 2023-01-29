@@ -65,7 +65,7 @@ public class NewConversationActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             // Do something with the image, such as displaying it in an ImageView.
-            Result res = Utils.scanQRCode(imageBitmap);
+            String res = Utils.scanQRCode(imageBitmap);
 
             if (res == null) {
                 Snackbar.make(findViewById(R.id.generate_qr_button), "Couldn't read QR code.", Snackbar.LENGTH_LONG).show();

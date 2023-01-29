@@ -14,7 +14,9 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.FormatException;
 import com.google.zxing.LuminanceSource;
 import com.google.zxing.NotFoundException;
+import com.google.zxing.PlanarYUVLuminanceSource;
 import com.google.zxing.RGBLuminanceSource;
+import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -99,31 +101,42 @@ public class Utils {
                 getInt(ctx.getString(id), ctx.getResources().getInteger(defaultId));
     }
 
-    public static Result scanQRCode(Bitmap bitmap) {
+    public static String scanQRCode(Bitmap bitmap) {
+        QRCodeReader reader = new QRCodeReader();
+        Map<DecodeHintType, Object> hints = new HashMap<>();
+        hints.put(DecodeHintType.CHARACTER_SET, "ISO-8859-1"); // set character set to ISO-8859-1 for binary data
+        hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
+        BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(toLuminanceSource(bitmap)));
         try {
-            QRCodeReader reader = new QRCodeReader();
-            int[] intArray = new int[bitmap.getWidth()*bitmap.getHeight()];
-            // copy pixel data from the Bitmap into the 'intArray' array
-            bitmap.getPixels(intArray, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
-
-            LuminanceSource source = new RGBLuminanceSource(bitmap.getWidth(), bitmap.getHeight(), intArray);
-            BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(source));
-            return reader.decode(binaryBitmap, new HashMap<DecodeHintType, Object>());
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-        } catch (ChecksumException e) {
-            e.printStackTrace();
-        } catch (FormatException e) {
+            Result result = reader.decode(binaryBitmap, hints);
+            return result.getText();
+        } catch (ReaderException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    static LuminanceSource toLuminanceSource(Bitmap bitmap) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int[] pixels = new int[width * height];
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+
+        byte[] yuv = new byte[width * height];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                int grey = pixels[i * width + j];
+                yuv[i * width + j] = (byte) grey;
+            }
+        }
+        return new PlanarYUVLuminanceSource(yuv, width, height, 0, 0, width, height, false);
     }
 
     public static Bitmap generateQRCode(String data, int width, int height) {
         try {
             QRCodeWriter writer = new QRCodeWriter();
             Map<EncodeHintType, Object> hints = new HashMap<>();
-            hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+            hints.put(EncodeHintType.CHARACTER_SET, "ISO-8859-1"); // set character set to ISO-8859-1 for binary data
             BitMatrix bitMatrix = writer.encode(data, BarcodeFormat.QR_CODE, width, height, hints);
             int[] pixels = new int[width * height];
             for (int y = 0; y < height; y++) {
