@@ -37,7 +37,7 @@ class ConversationSelectionAdapter extends RecyclerView.Adapter<ConversationSele
     @Override
     public void onBindViewHolder(ConversationSelectionViewHolder holder, int position) {
         // Bind data for the Conversation item to the views in the ConversationSelectionViewHolder
-        Conversation conversation = conversations.get(position);
+        Conversation conversation = conversations.get(holder.getAdapterPosition());
         holder.title.setText(conversation.name);
         holder.lastMessage.setText(conversation.lastMessageText);
         holder.timestamp.setText(Utils.timestampToText(conversation.lastMessageTimestamp));

@@ -19,6 +19,9 @@ public class Conversation {
     @ColumnInfo(name = "last_message_text")
     public String lastMessageText;
 
+    @ColumnInfo(name = "last_message_sender")
+    public String lastMessageSender;
+
     @ColumnInfo(name = "creation_timestamp")
     public long creationTimestamp;
 

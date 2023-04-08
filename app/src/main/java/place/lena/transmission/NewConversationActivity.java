@@ -2,10 +2,15 @@ package place.lena.transmission;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
@@ -17,10 +22,13 @@ import com.google.zxing.Result;
 import com.google.zxing.client.result.ResultParser;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Random;
 
 public class NewConversationActivity extends AppCompatActivity {
 
+    public RadioService service;
+    public boolean isBound = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,11 +36,13 @@ public class NewConversationActivity extends AppCompatActivity {
 
         Button scan = findViewById(R.id.scan_qr_button);
         scan.setOnClickListener(v -> {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                startActivityForResult(takePictureIntent, 1);
-            } else {
-                Snackbar.make(scan, "You got no camera app.", Snackbar.LENGTH_LONG).show();
+            if (isBound) {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, 1);
+                } else {
+                    Snackbar.make(scan, "You got no camera app.", Snackbar.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -56,6 +66,33 @@ public class NewConversationActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        Intent bindIntent = new Intent(getApplicationContext(), RadioService.class);
+        NewConversationActivity activity = this;
+        ServiceConnection connection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder svc) {
+                service = ((RadioService.RadioServiceBinder)svc).getService();
+                isBound = true;
+                service.setNotificationStopButtonEnabled(false);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                isBound = false;
+            }
+        };
+        if (!isBound) {
+            bindService(bindIntent, connection, 0);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (isBound) {
+            service.setNotificationStopButtonEnabled(true);
+        }
     }
 
     @Override
@@ -73,6 +110,10 @@ public class NewConversationActivity extends AppCompatActivity {
             }
 
             //TODO: do stuff with the QR code
+            byte[] bytes = res.getBytes(StandardCharsets.ISO_8859_1); // binary
+            if (isBound) {
+                service.createConversation(bytes);
+            }
         }
     }
 }

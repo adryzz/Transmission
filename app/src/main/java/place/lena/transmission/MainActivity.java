@@ -62,8 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         binding.fab.setOnClickListener(view -> {
-            Snackbar.make(view, "This should in theory open the menu to add a new conversation, but it's clearly not implemented yet.", Snackbar.LENGTH_LONG).show();
-
             if (isServiceConnected) {
                 service.createConversation("sela");
                 Intent i = new Intent(this, NewConversationActivity.class);

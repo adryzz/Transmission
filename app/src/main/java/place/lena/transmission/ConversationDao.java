@@ -19,7 +19,7 @@ public interface ConversationDao {
     @Query("SELECT * FROM conversation WHERE uid = :conversationId")
     Conversation getConversation(long conversationId);
 
-    @Query("UPDATE conversation SET last_message_timestamp = :timestamp, last_message_text = :text WHERE uid = :conversationId")
-    void updateLastMessage(long conversationId, long timestamp, String text);
+    @Query("UPDATE conversation SET last_message_timestamp = :timestamp, last_message_text = :text, last_message_sender = :sender WHERE uid = :conversationId")
+    void updateLastMessage(long conversationId, long timestamp, String text, String sender);
 
 }

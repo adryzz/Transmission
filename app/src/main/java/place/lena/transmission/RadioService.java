@@ -15,10 +15,18 @@ import android.os.IBinder;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.Person;
+import androidx.core.app.RemoteInput;
 import androidx.core.app.TaskStackBuilder;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
 import androidx.preference.PreferenceManager;
 import androidx.room.Room;
+
+import com.hoho.android.usbserial.driver.UsbSerialDriver;
+import com.hoho.android.usbserial.driver.UsbSerialProber;
 
 import place.lena.transmission.R;
 
@@ -34,10 +42,11 @@ public class RadioService extends Service {
     BroadcastReceiver usbDisconnectionReceiver;
     BroadcastReceiver lowBatteryReceiver;
     UsbDevice usbDevice;
+    UsbSerialDriver driver;
     MessageReceivedEventListener messageListener;
     String notificationText;
     boolean isStopButtonEnabled = true;
-
+    Observer<List<Message>> notificationObserver;
     Random random = new Random();
     AppDatabase database;
 
@@ -54,10 +63,8 @@ public class RadioService extends Service {
             }
         }
         //TODO: fix this
-        Executors.newSingleThreadExecutor().execute(() -> {
             database = Room.databaseBuilder(getApplicationContext(),
                     AppDatabase.class, "transmission-database").allowMainThreadQueries().build();
-        });
 
 
         setupIntentReceivers();
@@ -69,11 +76,18 @@ public class RadioService extends Service {
 
         // check if the device is actually connected (and if we have the permission to open said device)
         if (device != null && manager.hasPermission(device)) {
-            notifText = getString(R.string.persistent_notification_radios, getConnectedRadios());
             usbDevice = device;
+            driver = UsbSerialProber.getDefaultProber().probeDevice(usbDevice);
+
+            if (driver == null) {
+                notifText = getString(R.string.persistent_notification_device_not_compatible);
+            } else {
+                notifText = getString(R.string.persistent_notification_radios, getConnectedRadios());
+            }
         }
 
         setupPreferences();
+        setupMessageNotifications();
 
         startForeground(9, createPersistentNotification(notifText, false));
         return super.onStartCommand(intent, flags, startId);
@@ -177,6 +191,90 @@ public class RadioService extends Service {
         // apply current preferences to device
     }
 
+    void setupMessageNotifications() {
+        MessageDao dao = database.messageDao();
+        LiveData<List<Message>> messages = dao.getRecentMessages(4);
+        notificationObserver = messages1 -> {
+
+            if (messages1.size() == 0) {
+                return;
+            }
+            Message msg = messages1.get(0);
+
+            ConversationDao mDao = database.conversationDao();
+            if (msg.rssi == 0) {
+                mDao.updateLastMessage(msg.conversationId, msg.timestamp, msg.text, getString(R.string.message_notifications_user_name));
+            } else {
+                Conversation convo = getConversation(msg.conversationId);
+                mDao.updateLastMessage(msg.conversationId, msg.timestamp, msg.text, convo.name);
+            }
+            //createMessageNotification(msg);
+
+        };
+        messages.observeForever(notificationObserver);
+    }
+
+    void createMessageNotification(Message msg) {
+        Conversation convo = getConversation(msg.conversationId);
+
+        String replyLabel = getResources().getString(R.string.reply_label);
+        RemoteInput remoteInput = new RemoteInput.Builder("KEY_TEXT_REPLY")
+                .setLabel(replyLabel)
+                .build();
+
+        Intent intent = new Intent(getApplicationContext(), ConversationActivity.class);
+        intent.putExtra(getApplicationContext().getString(R.string.chat_id_intent_extra), convo.uid);
+
+        PendingIntent clickPendingIntent =
+                PendingIntent.getBroadcast(getApplicationContext(),
+                        6,
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Action click =
+                new NotificationCompat.Action.Builder(R.drawable.round_add_24,
+                        getString(R.string.reply_label), clickPendingIntent)
+                        .build();
+
+        PendingIntent replyPendingIntent =
+                PendingIntent.getBroadcast(getApplicationContext(),
+                        7,
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Action action =
+                new NotificationCompat.Action.Builder(R.drawable.round_add_24,
+                        getString(R.string.reply_label), replyPendingIntent)
+                        .addRemoteInput(remoteInput)
+                        .build();
+
+
+        Person other = new Person.Builder().setName(convo.name).build();
+        Person you = new Person.Builder().setName(getString(R.string.message_notifications_user_name)).build();
+        List<Message> recent = getMessagesForConversation(convo.uid, 4);
+
+        NotificationCompat.MessagingStyle style = new NotificationCompat.MessagingStyle(you)
+                .setConversationTitle(convo.name);
+
+        for(int i = recent.size()-1; i >= 0  ; i--) {
+            Message m = recent.get(i);
+            if (m.rssi == 0) {
+                style.addMessage(m.text, m.timestamp, you);
+            } else {
+                style.addMessage(m.text, m.timestamp, other);
+            }
+        }
+
+        Notification notif = new NotificationCompat.Builder(getApplicationContext(), getString(R.string.messages_notification_channel_id))
+                .setSmallIcon(R.drawable.round_signal_cellular_0_bar_24)
+                .setStyle(style)
+                .setOnlyAlertOnce(true)
+                .build();
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+        notificationManager.notify((int)msg.uid, notif);
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         return binder;
@@ -223,12 +321,17 @@ public class RadioService extends Service {
     }
 
     public void createConversation(String name) {
+        //TODO: remove this garbage
         ConversationDao dao = database.conversationDao();
         Conversation c = new Conversation();
         c.uid = random.nextLong();
         c.creationTimestamp = Instant.now().getEpochSecond();
         c.name = name;
         dao.insert(c);
+    }
+
+    public void createConversation(byte[] conversationInfo) {
+        //TODO: implement
     }
 
     public void sendMessage(long channelId, String text) {
@@ -243,14 +346,16 @@ public class RadioService extends Service {
 
         MessageDao dao = database.messageDao();
         dao.insert(message);
-
-        ConversationDao mDao = database.conversationDao();
-        mDao.updateLastMessage(channelId, unixTime, text);
     }
 
     public LiveData<List<Message>> getMessagesForConversation(long channelId) {
         MessageDao dao = database.messageDao();
-        return dao.getRecentMessages(channelId, 128);
+        return dao.getRecentMessagesFromConversationLive(channelId, 128);
+    }
+
+    List<Message> getMessagesForConversation(long channelId, int limit) {
+        MessageDao dao = database.messageDao();
+        return dao.getRecentMessagesFromConversation(channelId, limit);
     }
 
     public void setOnMessageReceivedEventListener(MessageReceivedEventListener listener) {
@@ -260,6 +365,4 @@ public class RadioService extends Service {
     public interface MessageReceivedEventListener {
         void onMessageReceived(Message message);
     }
-
-
 }

@@ -48,7 +48,8 @@ public class FirstFragment extends Fragment {
             adapter.setItems(cvs, false);
             recyclerView.smoothScrollToPosition(0);
         });
-        recyclerView.setAdapter(adapter);
+
+        //recyclerView.setAdapter(adapter);
     }
 
     @Override

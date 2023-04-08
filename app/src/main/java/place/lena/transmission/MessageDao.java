@@ -18,6 +18,12 @@ public interface MessageDao {
     void update(Message message);
 
     @Query("SELECT * FROM message WHERE conversation_id = :conversationId ORDER BY timestamp DESC LIMIT :limit")
-    LiveData<List<Message>> getRecentMessages(long conversationId, int limit);
+    LiveData<List<Message>> getRecentMessagesFromConversationLive(long conversationId, int limit);
+
+    @Query("SELECT * FROM message WHERE conversation_id = :conversationId ORDER BY timestamp DESC LIMIT :limit")
+    List<Message> getRecentMessagesFromConversation(long conversationId, int limit);
+
+    @Query("SELECT * FROM message ORDER BY timestamp DESC LIMIT :limit")
+    LiveData<List<Message>> getRecentMessages(int limit);
 
 }

@@ -8,9 +8,10 @@
     <string name="persistent_notification_channel_description">The persistent notification will go here</string>
     <string name="persistent_notification_stop">Stop</string>
     <string name="persistent_notification_no_radio">No radio connected.</string>
-    <string name="persistent_notification_radios">%1$i radio(s) connected.</string>
+    <string name="persistent_notification_radios">%d radio(s) connected.</string>
     <string name="reply_label">Reply</string>
     <string name="persistent_notification_title">Transmission is running</string>
+    <string name="message_notifications_user_name">You</string>
 
     <string name="action_settings">Settings</string>
     <string name="action_toggle_radio_0">Toggle radio 0</string>
@@ -24,6 +25,7 @@
 
     <string name="edit_message_hint">Transmission message</string>
     <string name="chat_id_intent_extra">chat_id</string>
+    <string name="chat_new_placeholder_message">New conversation</string>
 
     <!-- Preferences -->
     <string name="settings_main_category_label">Transmission settings</string>
@@ -129,4 +131,5 @@
     <!-- New Conversation -->
     <string name="qr_code_scan_button_label">Scan Conversation QR code</string>
     <string name="qr_code_generate_button_label">Generate Conversation QR code</string>
+    <string name="persistent_notification_device_not_compatible">The USB device provided isn\'t compatible or isn\'t working correctly.</string>
 </resources>
