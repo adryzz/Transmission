@@ -13,6 +13,7 @@ import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -97,7 +98,7 @@ public class RadioService extends Service {
             }
         }
 
-        //TODO: swithc to connected device
+
         if (port != null && port.isOpen()) {
             notifText = getString(R.string.persistent_notification_radios, getConnectedRadios());
         }
@@ -170,9 +171,21 @@ public class RadioService extends Service {
 
                 if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
                     UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                    if (device != null && device.getDeviceId() == usbDevice.getDeviceId()) {
+                    if (device != null && usbDevice != null && device.getDeviceId() == usbDevice.getDeviceId()) {
                         // call your method that cleans up and closes communication with the device
-
+                        if (port != null) {
+                            try {
+                                if (port.isOpen()) {
+                                    port.close();
+                                }
+                                port = null;
+                            } catch (IOException e) {
+                                Log.e("TAG", "Device detatched: couldn't close port.\n" + Log.getStackTraceString(e));
+                            }
+                        }
+                        usbDevice = null;
+                        connection = null;
+                        driver = null;
                         NotificationManagerCompat.from(getApplicationContext()).notify(9,
                                 createPersistentNotification(getString(R.string.persistent_notification_no_radio), isStopButtonEnabled));
                     }
@@ -302,7 +315,7 @@ public class RadioService extends Service {
             try {
                 port.close();
             } catch (IOException e) {
-                // we dont give a shit
+                Log.e("TAG", "Service destroyed: couldn't close port.\n" + Log.getStackTraceString(e));
             }
         }
         stopForeground(true);
