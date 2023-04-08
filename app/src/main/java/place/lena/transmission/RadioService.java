@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.Binder;
 import android.os.IBinder;
@@ -26,10 +27,12 @@ import androidx.preference.PreferenceManager;
 import androidx.room.Room;
 
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
+import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
 
 import place.lena.transmission.R;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Random;
@@ -43,6 +46,8 @@ public class RadioService extends Service {
     BroadcastReceiver lowBatteryReceiver;
     UsbDevice usbDevice;
     UsbSerialDriver driver;
+    UsbSerialPort port;
+    UsbDeviceConnection connection;
     MessageReceivedEventListener messageListener;
     String notificationText;
     boolean isStopButtonEnabled = true;
@@ -75,15 +80,26 @@ public class RadioService extends Service {
         String notifText = getString(R.string.persistent_notification_no_radio);
 
         // check if the device is actually connected (and if we have the permission to open said device)
-        if (device != null && manager.hasPermission(device)) {
+        if (usbDevice == null && device != null && manager.hasPermission(device)) {
             usbDevice = device;
             driver = UsbSerialProber.getDefaultProber().probeDevice(usbDevice);
 
             if (driver == null) {
                 notifText = getString(R.string.persistent_notification_device_not_compatible);
             } else {
-                notifText = getString(R.string.persistent_notification_radios, getConnectedRadios());
+                port = driver.getPorts().get(0);
+                connection = manager.openDevice(usbDevice);
+                try {
+                    port.open(connection);
+                } catch (IOException e) {
+                    notifText = getString(R.string.persistent_notification_device_not_compatible);
+                }
             }
+        }
+
+        //TODO: swithc to connected device
+        if (port != null && port.isOpen()) {
+            notifText = getString(R.string.persistent_notification_radios, getConnectedRadios());
         }
 
         setupPreferences();
@@ -282,6 +298,13 @@ public class RadioService extends Service {
 
     @Override
     public void onDestroy() {
+        if (port != null) {
+            try {
+                port.close();
+            } catch (IOException e) {
+                // we dont give a shit
+            }
+        }
         stopForeground(true);
         getApplicationContext().unregisterReceiver(usbDisconnectionReceiver);
         getApplicationContext().unregisterReceiver(lowBatteryReceiver);
